@@ -41,10 +41,10 @@ class Provider extends AbstractProvider implements ProviderInterface
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
-            'body' => $this->getTokenFields($code),
+            'form_params' => $this->getTokenFields($code),
         ]);
 
-        return $this->parseAccessToken($response->getBody());
+        return $this->parseAccessToken($response->getBody()->getContents());
     }
 
     /**
@@ -53,8 +53,6 @@ class Provider extends AbstractProvider implements ProviderInterface
     protected function getUserByToken($token)
     {
         try {
-            $client = $this->getHttpClient();
-
             $data = json_encode([
                 'from' => 'Member',
                 'select' => ['Name', 'Username', 'Email', 'Avatar.Content'],
@@ -70,14 +68,14 @@ class Provider extends AbstractProvider implements ProviderInterface
                 'body' => $data,
             ];
 
-            $response = $client->post(
+            $response = $this->getHttpClient()->post(
                 'https://www11.v1host.com/V1Integrations/query.v1', $requestOptions
             );
         } catch (BadResponseException $e) {
-            echo $e->getMessage().PHP_EOL;
+            echo($e->getMessage().PHP_EOL);
         }
 
-        return $response->json();
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     /**
@@ -86,7 +84,7 @@ class Provider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         if (empty($user[0][0])) {
-            echo 'Error response user data';
+            echo('Error response user data');
         }
 
         $user = $user[0][0];

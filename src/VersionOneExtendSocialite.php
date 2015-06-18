@@ -1,4 +1,5 @@
 <?php
+
 namespace SocialiteProviders\VersionOne;
 
 use SocialiteProviders\Manager\SocialiteWasCalled;
@@ -10,6 +11,6 @@ class VersionOneExtendSocialite
      */
     public function handle(SocialiteWasCalled $socialiteWasCalled)
     {
-        $socialiteWasCalled->extendSocialite('versionone', __NAMESPACE__ . '\Provider');
+        $socialiteWasCalled->extendSocialite('versionone', __NAMESPACE__.'\Provider');
     }
 }
