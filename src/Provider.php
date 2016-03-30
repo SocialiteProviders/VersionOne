@@ -2,13 +2,18 @@
 
 namespace SocialiteProviders\VersionOne;
 
-use Laravel\Socialite\Two\AbstractProvider;
-use Laravel\Socialite\Two\ProviderInterface;
-use Laravel\Socialite\Two\User;
 use Guzzle\Http\Exception\BadResponseException;
+use Laravel\Socialite\Two\ProviderInterface;
+use SocialiteProviders\Manager\OAuth2\AbstractProvider;
+use SocialiteProviders\Manager\OAuth2\User;
 
 class Provider extends AbstractProvider implements ProviderInterface
 {
+    /**
+     * Unique Provider Identifier.
+     */
+    const IDENTIFIER = 'VERSIONONE';
+
     /**
      * {@inheritdoc}
      */
@@ -72,7 +77,7 @@ class Provider extends AbstractProvider implements ProviderInterface
                 'https://www11.v1host.com/V1Integrations/query.v1', $requestOptions
             );
         } catch (BadResponseException $e) {
-            echo($e->getMessage().PHP_EOL);
+            echo $e->getMessage().PHP_EOL;
         }
 
         return json_decode($response->getBody()->getContents(), true);
@@ -84,7 +89,7 @@ class Provider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         if (empty($user[0][0])) {
-            echo('Error response user data');
+            echo 'Error response user data';
         }
 
         $user = $user[0][0];
